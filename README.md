@@ -31,6 +31,59 @@ F --> G["Send Itinerary via Gmail"]
   ✨ The system transforms your travel preferences into a complete itinerary JSON, converts it into human-readable format, and emails it to you automatically.
   
 ---
+## 🎬 Visual Demo
+
+## 🎬 Visual Demo
+
+<div align="center">
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="gif1.gif" width="500" /><br>
+      <b>Website Home</b>
+    </td>
+    <td align="center">
+      <img src="gif2.gif" width="500" /><br>
+      <b>Website Operation</b>
+    </td>
+    <td align="center">
+      <img src="gif3.gif" width="500" /><br>
+      <b>n8n Operation</b>
+    </td>
+    <td align="center">
+      <img src="gif4.gif" width="500" /><br>
+      <b>n8n Operation Complete</b>
+    </td>
+    <td align="center">
+      <img src="gif5.gif" width="500" /><br>
+      <b>Email Received</b>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+
+---
+
+## 📸 Website Snapshots
+
+Here are some snapshots showing the functionality and features of the project:
+
+<div align="center">
+
+<img src="gif1.gif" alt="Homepage" width="220" style="margin:5px;" />
+<img src="gif2.gif" alt="Website Operation 1" width="220" style="margin:5px;" />
+<img src="gif3.gif" alt="n8n Operation Start" width="220" style="margin:5px;" />
+<img src="gif4.gif" alt="n8n Operation Complete" width="220" style="margin:5px;" />
+<img src="gif5.gif" alt="Email Received" width="220" style="margin:5px;" />
+
+</div>
+
+---
+
+
 
 ## 🧩 Tech Stack
 
