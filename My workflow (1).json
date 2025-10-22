@@ -1,0 +1,302 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "b671b40d-226e-403d-95ae-b50db53fc911",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9bf24a50-4b22-4a3a-86ee-3238ea6765a0",
+      "name": "Webhook",
+      "webhookId": "b671b40d-226e-403d-95ae-b50db53fc911"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ukhI8zyCABdD9-Bh3U967vT5yEZRG3GHfdJSgF67GVw",
+          "mode": "list",
+          "cachedResultName": "VoyageSHEET",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ukhI8zyCABdD9-Bh3U967vT5yEZRG3GHfdJSgF67GVw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ukhI8zyCABdD9-Bh3U967vT5yEZRG3GHfdJSgF67GVw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.query.name }}",
+            "email": "={{ $json.query.email }}",
+            "dream destination": "={{ $json.query.destination }}",
+            "start Date": "={{ $json.query.startDate }}",
+            "End date": "={{ $json.query.endDate }}",
+            "Budget": "={{ $json.query.budget }}",
+            "Interest and preferences": "={{ $json.query.interests }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "dream destination",
+              "displayName": "dream destination",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "start Date",
+              "displayName": "start Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "End date",
+              "displayName": "End date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Interest and preferences",
+              "displayName": "Interest and preferences",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "af5251da-600e-49ef-a50c-4ea15d896f83",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "nVAZWaHQB0XSYJRc",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Senior Travel Planning Analyst. Your expertise is in creating highly detailed, personalized, and practical travel itineraries based on a user's specific constraints and preferences. You have access to a curated knowledge base about destinations, which you will use to generate a comprehensive travel plan.\n\n**User Information:**\n- **Name:** {{ $json.name }}\n- **Email:** {{ $json.email }}\n- **Destination:** {{ $json['dream destination'] }}\n- **Start Date:**{{ $json['start Date'] }}\n- **End Date:** {{ $json['End date'] }}\n- **Budget:** {{ $json.Budget }}\n- **Interests:** {{ $json['Interest and preferences'] }}\n\n**Instructions:**\n1.  **Analyze the Constraints:**\n    - The travel dates are from {{ $json['start Date'] }} to {{ $json['End date'] }} . Calculate the total duration in days.\n    - The budget is classified as '{{ $json.Budget }}'. This means you must prioritize cost-effective options for accommodation, food, and activities.\n    - The primary interest is '{{ $json['Interest and preferences'] }}'. While the itinerary should focus on this, include a few culturally enriching experiences to provide a well-rounded trip.\n    - The destination is '{{ $json['dream destination'] }}'.\n\n2.  **Generate a Comprehensive Itinerary:**\n    - Create a detailed, day-by-day itinerary. For each day, provide a title, a brief overview of the activities, and specific recommendations (e.g., names of places, cost estimates).\n    - Ensure the itinerary is logically structured, grouping geographically close activities to minimize travel time and costs.\n    - Propose budget-friendly accommodation and dining options (e.g., local eateries, hostels).\n    - Include practical advice on local transportation, including cost-effective options.\n    - Add a section on essential cultural and safety tips relevant to the destination.\n\n3.  **Output Format:**\n    - Your entire response MUST be a single, valid JSON object. Do not include any text before or after the JSON.\n    - The JSON object must contain the following keys:\n        - `itinerary_summary`: A brief, high-level overview of the entire trip.\n        - `day_by_day_itinerary`: An array of objects, where each object represents one day of the trip. Each daily object must have keys for `day_number`, `date`, `title`, and `activities`.\n        - `budget_breakdown`: An object detailing the estimated costs for a budget traveler.\n        - `transportation_guide`: A structured guide to local transport options.\n        - `cultural_etiquette`: An object containing essential tips and safety information.\n\nThe structure of the JSON is critical for the n8n workflow to parse the output correctly. By explicitly defining the required keys and their data types, the AI's response is transformed from a free-form text block into a machine-readable data payload.\n\n## Chapter 3: The Case Study: A 7-Day Budget Beach Itinerary for Bali in September\n\nThis section presents a detailed, data-driven itinerary for the user’s specific request: a budget beach trip to Bali from September 12 to September 20, 2025. The plan demonstrates how the AI agent synthesizes a wide array of information to create a practical and personalized travel plan.\n\n### 3.1 The \"Golden Zone\" of September: A Foundational Analysis\n\nSeptember is a particularly advantageous time to visit Bali. The month is often described as the \"golden zone\" because it occupies a perfect window between the island’s peak tourist season and the start of the wet season.[5] The weather remains excellent, with consistent sunshine and minimal rainfall, making it ideal for outdoor and beach activities.[5, 6] The average daytime temperature hovers around 28°C (82°F).[5] This period is still prone to high UV levels, so travelers must take precautions like using SPF 30+ sunscreen and wearing a hat.[5]\n\nCrucially, the end of the high season in July and August—when school holidays are in effect—results in a noticeable decrease in crowds.[5] This reduced tourist volume has a direct impact on the travel experience. Popular spots like temples, waterfalls, and cafes become more accessible with shorter queues and less traffic congestion.[5] Furthermore, the dip in demand translates into more favorable pricing. The research indicates that costs for flights, accommodations, and tours start to decrease in the latter half of the month, offering better value for budget-conscious travelers.[5, 7] This period presents an opportunity to experience the island’s natural beauty and cultural offerings without the chaos and inflated prices of the peak season.\n\n### 3.2 A Budget-Conscious, Beach-Focused Itinerary\n\nThe following itinerary is generated in response to the user's inputs, prioritizing the `beach` interest while adhering to a `budget` constraint. The plan incorporates diverse beach experiences and includes key cultural excursions for a well-rounded trip.\n\n**Day 1: Arrival in Southern Bali & Seminyak Sunset**\n- **Activities:** Arrive at Ngurah Rai International Airport (DPS) and take an affordable ride-hailing service like Grab or Gojek to Seminyak.[8] Check into a budget-friendly hostel. In the evening, head to Seminyak Beach, an area known for its vibrant atmosphere and trendy beach clubs.[5, 9] Enjoy the lively sunset from a spot like Ku De Ta or Potato Head, which turn the event into a major social occasion.[5]\n\n**Day 2: Surfing & Local Vibes in Canggu**\n- **Activities:** Travel to Canggu, a short ride from Seminyak, using a ride-hailing app. Canggu is a more laid-back area known for its surf scene and digital nomad community.[9] Spend the morning learning to surf at Batu Bolong Beach, which offers long, rolling waves perfect for beginners.[5] The afternoon can be spent exploring the trendy cafes and street art. End the day at Echo Beach, known for its solid sunsets and a grittier, local vibe.[5]\n\n**Day 3: A Day of Swimming at Pandawa Beach**\n- **Activities:** The user's interest is in beaches, which can encompass a range of experiences beyond just surfing. The itinerary allocates a day for swimming. Hire a private car with a driver for a full-day tour to a more secluded beach.[5, 10] Head to Pandawa Beach in Southern Bali, which is known for its calm, clear water and soft white sand, making it one of the best spots for swimming.[5, 11] The beach is framed by unique limestone cliffs and has on-site facilities and `warungs` for food.[11]\n\n**Day 4: Inland Exploration: Ubud's Culture & Nature**\n- **Activities:** While focused on beaches, a trip to Bali is incomplete without experiencing its cultural heart. Take a ride inland to Ubud, the island's spiritual hub.[12] Visit the Sacred Monkey Forest Sanctuary, and then explore the stunning Tegalalang Rice Terraces, which are less crowded in September.[5, 13] End the day with a visit to a local `warung` for an authentic, budget-friendly meal.[10, 14]\n\n**Day 5: Waterfalls & Rice Terraces**\n- **Activities:** Continue the inland exploration with a focus on Bali’s natural beauty. Visit the Tegallalang Rice Terraces for breathtaking views.[13, 15] Explore the Jatiluwih Rice Terraces, a UNESCO World Heritage site known for its vast, sprawling fields framed by volcanoes in the distance.[13] This offers a more peaceful, off-the-beaten-path experience. Depending on the remaining time, consider visiting a waterfall like Tegenungan or Tibumana, which have small entry fees.[10]\n\n**Day 6: Temple Views & Seafood Dinner**\n- **Activities:** Travel to the Bukit Peninsula to visit two iconic temples. Start with Uluwatu Temple, perched on a dramatic cliffside, offering stunning coastal views.[13] In the evening, head to Jimbaran Beach, one of the few places in Bali where you can enjoy a fresh seafood dinner directly on the sand while watching the sunset.[5, 11]\n\n**Day 7: Relaxation & Departure**\n- **Activities:** Enjoy a final morning of relaxation with an affordable Balinese spa treatment, which can be found for as little as $10-30 USD per hour.[10] This provides a final, classic Bali experience before the flight. Take a ride-hailing service back to the airport for the departure.\n\n***\n\n| Day | Location | Primary Activities |\n| :--- | :--- | :--- |\n| **Day 1** | Seminyak | Arrive, settle in, explore Seminyak Beach and its clubs, enjoy sunset |\n| **Day 2** | Canggu | Morning surf lesson at Batu Bolong, cafe hopping, sunset at Echo Beach |\n| **Day 3** | South Bali | Full-day tour to a swimmable beach like Pandawa Beach |\n| **Day 4** | Ubud | Explore Sacred Monkey Forest & Tegallalang Rice Terraces, dine at a `warung` |\n| **Day 5** | Central Bali | Visit Jatiluwih Rice Terraces, explore Tegenungan Waterfall |\n| **Day 6** | Jimbaran & Uluwatu | Visit Uluwatu Temple, enjoy a sunset seafood dinner on Jimbaran Beach |\n| **Day 7** | Southern Bali | Final spa treatment, preparation for departure |\n\n***\n\n### 3.3 The Budget Blueprint: A Financial Analysis\n\nAdhering to a `budget` constraint in Bali is achievable, with an estimated daily cost of $50-$100 USD.[10] The AI agent's plan prioritizes cost-effective choices across all major spending categories, leveraging the favorable pricing of the off-peak season.\n\n*   **Accommodation:** The plan recommends budget-friendly options such as hostels and B&Bs, which can be found for as low as $9-28 USD per night.[7, 10] The lower end of this range is especially accessible in less touristy areas or during September's mid-month slowdown.[5, 7]\n*   **Food & Drink:** The primary dining strategy focuses on local street food and `warungs`.[10, 16] A meal from a `warung` can cost as little as $1-3 USD, with dishes like *nasi campur* and *soto ayam* being both delicious and inexpensive.[14, 16] A reasonable daily budget for food and drink is approximately $20-35 USD.[10]\n*   **Activities:** The itinerary emphasizes low-cost and free activities. Hanging out at beaches is free, and most temples and waterfalls have a small entrance fee of $1-5 USD.[10] A guided hike of Mount Batur or a full-day tour with a driver are larger but manageable costs for a budget traveler.[10]\n*   **Transportation:** A combination of methods is recommended to balance cost and convenience. App-based services like Grab and Gojek are the most affordable and reliable for short trips within a region, with fares starting at $1-3 per trip.[7] For a full day of sightseeing, a private car with a driver is a cost-effective option for groups, starting around $35 USD for the day.[5, 10]\n\n| Category | Estimated Daily Cost (USD) | 7-Day Total (USD) |\n| :--- | :--- | :--- |\n| **Accommodation** | $15 | $105 |\n| **Food & Drink** | $30 | $210 |\n| **Activities & Entry Fees** | $15 | $105 |\n| **Transportation** | $10 | $70 |\n| **Miscellaneous (Souvenirs, etc.)** | $10 | $70 |\n| **Total Estimated Trip Cost** | **$80** | **$560** |\n\nThis financial breakdown demonstrates that the AI's recommendations are firmly rooted in the `budget` constraint provided by the user, providing a concrete plan to stay within a reasonable spending limit.\n\n### 3.4 Getting Around Bali: A Comparative Guide to Local Transportation\n\nThe choice of transportation in Bali is a critical factor for both cost and safety. While the island is small, its traffic can be chaotic, making some options more suitable than others depending on the user's confidence and budget.[5, 17] The AI agent must provide a nuanced guide that acknowledges the trade-offs of each option.\n\n*   **Scooter Rental:** This is the most cost-effective and flexible option, with daily rentals ranging from $3-10 USD.[10, 18] It is ideal for experienced riders who wish to explore at their own pace and navigate narrow, congested streets.[17] However, this option carries significant risk. It is a major cause of non-medical hospitalizations in Bali, and a valid International Driver's Permit with a motorbike license is a legal requirement that is often overlooked by rental companies.[18, 19] Riding without one can lead to legal issues and make any insurance coverage invalid.[19] A reputable company like Bikago offers well-maintained bikes, sanitized helmets, and roadside assistance to mitigate some of these risks.[20]\n*   **Ride-Hailing Apps (Grab/Gojek):** For the budget traveler, these apps are an excellent solution.[8] They offer fares that are often half the price of traditional metered taxis and provide upfront pricing.[7] The services are widely available in tourist areas, and the apps include security features like route tracking.[8] Grab even operates a lounge at the airport, making it a convenient arrival option.[8]\n*   **Private Car with Driver:** For exploring multiple attractions in a single day, this is the most convenient and safest option.[10, 17] A driver can be hired for a half or full day for around $35-60 USD.[5, 7, 10] This allows travelers to relax and enjoy the scenery without worrying about traffic, parking, or navigation.[17] For a budget-conscious traveler, this is best reserved for a single, full-day tour to a more remote area, such as the inland exploration planned for Day 3.\n\nThe AI agent’s itinerary leverages these options strategically, recommending Grab for daily, short-distance travel and a private driver for a long-distance tour, providing a blend of affordability, safety, and convenience.\n\n### 3.5 Cultural and Safety Considerations\n\nA successful trip involves more than just an itinerary; it requires an understanding of local customs and a focus on safety. The AI agent’s plan includes a dedicated section to provide essential, culturally sensitive advice.\n\n*   **Temple Etiquette:** When visiting sacred sites, visitors must wear a sarong and a sash to cover their legs and shoulders.[21, 22] Women who are menstruating are, by religious custom, prohibited from entering temples.[21, 22] It is also important to avoid stepping on the small offerings (`canang sari`) often found on the ground.[21]\n*   **Personal Interaction:** The head is considered the most sacred part of the body, and it is a major sign of disrespect to touch a person's head, even a child's.[21, 22] Likewise, the left hand is considered impure, and it should not be used for eating, giving, or receiving anything.[21, 22] When beckoning someone, use a downward-wagging motion with an open hand, as pointing is considered rude.[22]\n*   **General Behavior:** Public displays of affection, such as passionate kissing, are not socially acceptable and may make locals uncomfortable.[22] When riding a scooter, always wear a helmet, regardless of local attitudes towards them, as it can prevent serious injury.[23] Bali's traffic operates with its own rhythm, and a horn is often used as a simple acknowledgment of presence, not a sign of aggression.[18]\n\n## Chapter 4: Implementation and Workflow Integration in N8N\n\nThe technical implementation of this AI travel agent in n8n is a logical, multi-node workflow. The process is designed to be fully automated, from the moment a user's request is received to the delivery of the final itinerary.\n\n**Node 1: The Webhook Trigger**\nThis node serves as the entry point for the entire workflow. It listens for an incoming HTTP request, which in this case contains the user's travel information (name, email, destination, dates, budget, and interests). The data is received in a JSON format and made available to all subsequent nodes in the workflow, allowing for the dynamic construction of the prompt and the personalized email [user query].\n\n**Node 2: The AI Agent Node**\nThis is the core of the system. The AI Agent node is configured to connect to a large language model API, such as OpenAI's GPT-4.1, which is noted for its complex reasoning capabilities.[2] The node's `Prompt` field contains the sophisticated, dynamic template outlined in Chapter 2, incorporating the variables from the webhook. A critical setting is the `Require Specific Output Format`, which is enabled and configured to expect a JSON object. This forces the AI to structure its response precisely, ensuring that the output is not a free-form text block but a predictable data payload that can be programmatically processed.\n\n**Node 3: The JSON Parse Node**\nThe raw output from the AI Agent node is a string of text that represents a JSON object. The JSON Parse node is an essential intermediary step that converts this text string into a native JSON object. This transformation is crucial for the remainder of the workflow, as it allows subsequent nodes to access specific pieces of data from the itinerary, such as the `day_by_day_itinerary` or `budget_breakdown`, using simple dot notation.\n\n**Node 4: The Email Node**\nThe final node in the workflow is responsible for delivering the finished product to the user. An Email node, configured with the user's email address from the initial webhook, dynamically constructs the email body. The content of the email is built by referencing the parsed JSON data from the previous node. For example, the subject line could be \"Your Bali Itinerary,\" and the body could be a formatted HTML email that displays the `itinerary_summary`, followed by a detailed, day-by-day plan, and concludes with the budget, transportation, and etiquette sections. This automated delivery completes the end-to-end user experience without any manual intervention.\n\n## Chapter 5: Expanding the Agent's Capabilities\n\nThe foundational system detailed in this report can be significantly enhanced by incorporating additional nodes and API integrations. The current model relies on a static knowledge base, but a truly powerful agent can pull from real-time data sources to provide the most accurate and up-to-date information.[2]\n\nA logical next step would be to integrate an external API for flights and hotels, such as SerpAPI.[2] This would enable the agent to move beyond generating a conceptual plan to providing specific, real-time recommendations for flights and accommodation based on the user's dates and budget. Similarly, incorporating a weather API could provide up-to-the-minute forecasts, allowing the itinerary to be dynamically adjusted based on expected conditions, such as suggesting an indoor activity during a forecasted rain shower.[2]\n\nFor a more sophisticated system, the single AI Agent node could be replaced with a series of specialized agents orchestrated by a master brain.[2] A dedicated `Research Agent`, powered by tools like Tavily or Perplexity, could be tasked with retrieving the most recent and cited information on a topic, such as a new restaurant or a local festival.[2] This modular approach ensures that the agent's knowledge base is constantly refreshed and that it can provide highly accurate, cited information, elevating the quality of the itinerary from a static plan to a dynamic, well-informed travel guide. This evolution of the system reinforces the value of building with n8n's extendable architecture from the start.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a Senior Travel Planning Analyst. Your expertise is in creating highly detailed, personalized, and practical travel itineraries based on a user's specific constraints and preferences. You have access to a curated knowledge base about destinations, which you will use to generate a comprehensive travel plan.\n\n**User Information:**\n- **Name:** {{ $json.name }}\n- **Email:** {{ $json.email }}\n- **Destination:** {{ $json['dream destination'] }}\n- **Start Date:**{{ $json['start Date'] }}\n- **End Date:** {{ $json['End date'] }}\n- **Budget:** {{ $json.Budget }}\n- **Interests:** {{ $json['Interest and preferences'] }}\n\n**Instructions:**\n1.  **Analyze the Constraints:**\n    - The travel dates are from {{ $json['start Date'] }} to {{ $json['End date'] }} . Calculate the total duration in days.\n    - The budget is classified as '{{ $json.Budget }}'. This means you must prioritize cost-effective options for accommodation, food, and activities.\n    - The primary interest is '{{ $json['Interest and preferences'] }}'. While the itinerary should focus on this, include a few culturally enriching experiences to provide a well-rounded trip.\n    - The destination is '{{ $json['dream destination'] }}'.\n\n2.  **Generate a Comprehensive Itinerary:**\n    - Create a detailed, day-by-day itinerary. For each day, provide a title, a brief overview of the activities, and specific recommendations (e.g., names of places, cost estimates).\n    - Ensure the itinerary is logically structured, grouping geographically close activities to minimize travel time and costs.\n    - Propose budget-friendly accommodation and dining options (e.g., local eateries, hostels).\n    - Include practical advice on local transportation, including cost-effective options.\n    - Add a section on essential cultural and safety tips relevant to the destination.\n\n3.  **Output Format:**\n    - Your entire response MUST be a single, valid JSON object. Do not include any text before or after the JSON.\n    - The JSON object must contain the following keys:\n        - `itinerary_summary`: A brief, high-level overview of the entire trip.\n        - `day_by_day_itinerary`: An array of objects, where each object represents one day of the trip. Each daily object must have keys for `day_number`, `date`, `title`, and `activities`.\n        - `budget_breakdown`: An object detailing the estimated costs for a budget traveler.\n        - `transportation_guide`: A structured guide to local transport options.\n        - `cultural_etiquette`: An object containing essential tips and safety information.\n\nThe structure of the JSON is critical for the n8n workflow to parse the output correctly. By explicitly defining the required keys and their data types, the AI's response is transformed from a free-form text block into a machine-readable data payload.\n\n## Chapter 3: The Case Study: A 7-Day Budget Beach Itinerary for Bali in September\n\nThis section presents a detailed, data-driven itinerary for the user’s specific request: a budget beach trip to Bali from September 12 to September 20, 2025. The plan demonstrates how the AI agent synthesizes a wide array of information to create a practical and personalized travel plan.\n\n### 3.1 The \"Golden Zone\" of September: A Foundational Analysis\n\nSeptember is a particularly advantageous time to visit Bali. The month is often described as the \"golden zone\" because it occupies a perfect window between the island’s peak tourist season and the start of the wet season.[5] The weather remains excellent, with consistent sunshine and minimal rainfall, making it ideal for outdoor and beach activities.[5, 6] The average daytime temperature hovers around 28°C (82°F).[5] This period is still prone to high UV levels, so travelers must take precautions like using SPF 30+ sunscreen and wearing a hat.[5]\n\nCrucially, the end of the high season in July and August—when school holidays are in effect—results in a noticeable decrease in crowds.[5] This reduced tourist volume has a direct impact on the travel experience. Popular spots like temples, waterfalls, and cafes become more accessible with shorter queues and less traffic congestion.[5] Furthermore, the dip in demand translates into more favorable pricing. The research indicates that costs for flights, accommodations, and tours start to decrease in the latter half of the month, offering better value for budget-conscious travelers.[5, 7] This period presents an opportunity to experience the island’s natural beauty and cultural offerings without the chaos and inflated prices of the peak season.\n\n### 3.2 A Budget-Conscious, Beach-Focused Itinerary\n\nThe following itinerary is generated in response to the user's inputs, prioritizing the `beach` interest while adhering to a `budget` constraint. The plan incorporates diverse beach experiences and includes key cultural excursions for a well-rounded trip.\n\n**Day 1: Arrival in Southern Bali & Seminyak Sunset**\n- **Activities:** Arrive at Ngurah Rai International Airport (DPS) and take an affordable ride-hailing service like Grab or Gojek to Seminyak.[8] Check into a budget-friendly hostel. In the evening, head to Seminyak Beach, an area known for its vibrant atmosphere and trendy beach clubs.[5, 9] Enjoy the lively sunset from a spot like Ku De Ta or Potato Head, which turn the event into a major social occasion.[5]\n\n**Day 2: Surfing & Local Vibes in Canggu**\n- **Activities:** Travel to Canggu, a short ride from Seminyak, using a ride-hailing app. Canggu is a more laid-back area known for its surf scene and digital nomad community.[9] Spend the morning learning to surf at Batu Bolong Beach, which offers long, rolling waves perfect for beginners.[5] The afternoon can be spent exploring the trendy cafes and street art. End the day at Echo Beach, known for its solid sunsets and a grittier, local vibe.[5]\n\n**Day 3: A Day of Swimming at Pandawa Beach**\n- **Activities:** The user's interest is in beaches, which can encompass a range of experiences beyond just surfing. The itinerary allocates a day for swimming. Hire a private car with a driver for a full-day tour to a more secluded beach.[5, 10] Head to Pandawa Beach in Southern Bali, which is known for its calm, clear water and soft white sand, making it one of the best spots for swimming.[5, 11] The beach is framed by unique limestone cliffs and has on-site facilities and `warungs` for food.[11]\n\n**Day 4: Inland Exploration: Ubud's Culture & Nature**\n- **Activities:** While focused on beaches, a trip to Bali is incomplete without experiencing its cultural heart. Take a ride inland to Ubud, the island's spiritual hub.[12] Visit the Sacred Monkey Forest Sanctuary, and then explore the stunning Tegalalang Rice Terraces, which are less crowded in September.[5, 13] End the day with a visit to a local `warung` for an authentic, budget-friendly meal.[10, 14]\n\n**Day 5: Waterfalls & Rice Terraces**\n- **Activities:** Continue the inland exploration with a focus on Bali’s natural beauty. Visit the Tegallalang Rice Terraces for breathtaking views.[13, 15] Explore the Jatiluwih Rice Terraces, a UNESCO World Heritage site known for its vast, sprawling fields framed by volcanoes in the distance.[13] This offers a more peaceful, off-the-beaten-path experience. Depending on the remaining time, consider visiting a waterfall like Tegenungan or Tibumana, which have small entry fees.[10]\n\n**Day 6: Temple Views & Seafood Dinner**\n- **Activities:** Travel to the Bukit Peninsula to visit two iconic temples. Start with Uluwatu Temple, perched on a dramatic cliffside, offering stunning coastal views.[13] In the evening, head to Jimbaran Beach, one of the few places in Bali where you can enjoy a fresh seafood dinner directly on the sand while watching the sunset.[5, 11]\n\n**Day 7: Relaxation & Departure**\n- **Activities:** Enjoy a final morning of relaxation with an affordable Balinese spa treatment, which can be found for as little as $10-30 USD per hour.[10] This provides a final, classic Bali experience before the flight. Take a ride-hailing service back to the airport for the departure.\n\n***\n\n| Day | Location | Primary Activities |\n| :--- | :--- | :--- |\n| **Day 1** | Seminyak | Arrive, settle in, explore Seminyak Beach and its clubs, enjoy sunset |\n| **Day 2** | Canggu | Morning surf lesson at Batu Bolong, cafe hopping, sunset at Echo Beach |\n| **Day 3** | South Bali | Full-day tour to a swimmable beach like Pandawa Beach |\n| **Day 4** | Ubud | Explore Sacred Monkey Forest & Tegallalang Rice Terraces, dine at a `warung` |\n| **Day 5** | Central Bali | Visit Jatiluwih Rice Terraces, explore Tegenungan Waterfall |\n| **Day 6** | Jimbaran & Uluwatu | Visit Uluwatu Temple, enjoy a sunset seafood dinner on Jimbaran Beach |\n| **Day 7** | Southern Bali | Final spa treatment, preparation for departure |\n\n***\n\n### 3.3 The Budget Blueprint: A Financial Analysis\n\nAdhering to a `budget` constraint in Bali is achievable, with an estimated daily cost of $50-$100 USD.[10] The AI agent's plan prioritizes cost-effective choices across all major spending categories, leveraging the favorable pricing of the off-peak season.\n\n*   **Accommodation:** The plan recommends budget-friendly options such as hostels and B&Bs, which can be found for as low as $9-28 USD per night.[7, 10] The lower end of this range is especially accessible in less touristy areas or during September's mid-month slowdown.[5, 7]\n*   **Food & Drink:** The primary dining strategy focuses on local street food and `warungs`.[10, 16] A meal from a `warung` can cost as little as $1-3 USD, with dishes like *nasi campur* and *soto ayam* being both delicious and inexpensive.[14, 16] A reasonable daily budget for food and drink is approximately $20-35 USD.[10]\n*   **Activities:** The itinerary emphasizes low-cost and free activities. Hanging out at beaches is free, and most temples and waterfalls have a small entrance fee of $1-5 USD.[10] A guided hike of Mount Batur or a full-day tour with a driver are larger but manageable costs for a budget traveler.[10]\n*   **Transportation:** A combination of methods is recommended to balance cost and convenience. App-based services like Grab and Gojek are the most affordable and reliable for short trips within a region, with fares starting at $1-3 per trip.[7] For a full day of sightseeing, a private car with a driver is a cost-effective option for groups, starting around $35 USD for the day.[5, 10]\n\n| Category | Estimated Daily Cost (USD) | 7-Day Total (USD) |\n| :--- | :--- | :--- |\n| **Accommodation** | $15 | $105 |\n| **Food & Drink** | $30 | $210 |\n| **Activities & Entry Fees** | $15 | $105 |\n| **Transportation** | $10 | $70 |\n| **Miscellaneous (Souvenirs, etc.)** | $10 | $70 |\n| **Total Estimated Trip Cost** | **$80** | **$560** |\n\nThis financial breakdown demonstrates that the AI's recommendations are firmly rooted in the `budget` constraint provided by the user, providing a concrete plan to stay within a reasonable spending limit.\n\n### 3.4 Getting Around Bali: A Comparative Guide to Local Transportation\n\nThe choice of transportation in Bali is a critical factor for both cost and safety. While the island is small, its traffic can be chaotic, making some options more suitable than others depending on the user's confidence and budget.[5, 17] The AI agent must provide a nuanced guide that acknowledges the trade-offs of each option.\n\n*   **Scooter Rental:** This is the most cost-effective and flexible option, with daily rentals ranging from $3-10 USD.[10, 18] It is ideal for experienced riders who wish to explore at their own pace and navigate narrow, congested streets.[17] However, this option carries significant risk. It is a major cause of non-medical hospitalizations in Bali, and a valid International Driver's Permit with a motorbike license is a legal requirement that is often overlooked by rental companies.[18, 19] Riding without one can lead to legal issues and make any insurance coverage invalid.[19] A reputable company like Bikago offers well-maintained bikes, sanitized helmets, and roadside assistance to mitigate some of these risks.[20]\n*   **Ride-Hailing Apps (Grab/Gojek):** For the budget traveler, these apps are an excellent solution.[8] They offer fares that are often half the price of traditional metered taxis and provide upfront pricing.[7] The services are widely available in tourist areas, and the apps include security features like route tracking.[8] Grab even operates a lounge at the airport, making it a convenient arrival option.[8]\n*   **Private Car with Driver:** For exploring multiple attractions in a single day, this is the most convenient and safest option.[10, 17] A driver can be hired for a half or full day for around $35-60 USD.[5, 7, 10] This allows travelers to relax and enjoy the scenery without worrying about traffic, parking, or navigation.[17] For a budget-conscious traveler, this is best reserved for a single, full-day tour to a more remote area, such as the inland exploration planned for Day 3.\n\nThe AI agent’s itinerary leverages these options strategically, recommending Grab for daily, short-distance travel and a private driver for a long-distance tour, providing a blend of affordability, safety, and convenience.\n\n### 3.5 Cultural and Safety Considerations\n\nA successful trip involves more than just an itinerary; it requires an understanding of local customs and a focus on safety. The AI agent’s plan includes a dedicated section to provide essential, culturally sensitive advice.\n\n*   **Temple Etiquette:** When visiting sacred sites, visitors must wear a sarong and a sash to cover their legs and shoulders.[21, 22] Women who are menstruating are, by religious custom, prohibited from entering temples.[21, 22] It is also important to avoid stepping on the small offerings (`canang sari`) often found on the ground.[21]\n*   **Personal Interaction:** The head is considered the most sacred part of the body, and it is a major sign of disrespect to touch a person's head, even a child's.[21, 22] Likewise, the left hand is considered impure, and it should not be used for eating, giving, or receiving anything.[21, 22] When beckoning someone, use a downward-wagging motion with an open hand, as pointing is considered rude.[22]\n*   **General Behavior:** Public displays of affection, such as passionate kissing, are not socially acceptable and may make locals uncomfortable.[22] When riding a scooter, always wear a helmet, regardless of local attitudes towards them, as it can prevent serious injury.[23] Bali's traffic operates with its own rhythm, and a horn is often used as a simple acknowledgment of presence, not a sign of aggression.[18]\n\n## Chapter 4: Implementation and Workflow Integration in N8N\n\nThe technical implementation of this AI travel agent in n8n is a logical, multi-node workflow. The process is designed to be fully automated, from the moment a user's request is received to the delivery of the final itinerary.\n\n**Node 1: The Webhook Trigger**\nThis node serves as the entry point for the entire workflow. It listens for an incoming HTTP request, which in this case contains the user's travel information (name, email, destination, dates, budget, and interests). The data is received in a JSON format and made available to all subsequent nodes in the workflow, allowing for the dynamic construction of the prompt and the personalized email [user query].\n\n**Node 2: The AI Agent Node**\nThis is the core of the system. The AI Agent node is configured to connect to a large language model API, such as OpenAI's GPT-4.1, which is noted for its complex reasoning capabilities.[2] The node's `Prompt` field contains the sophisticated, dynamic template outlined in Chapter 2, incorporating the variables from the webhook. A critical setting is the `Require Specific Output Format`, which is enabled and configured to expect a JSON object. This forces the AI to structure its response precisely, ensuring that the output is not a free-form text block but a predictable data payload that can be programmatically processed.\n\n**Node 3: The JSON Parse Node**\nThe raw output from the AI Agent node is a string of text that represents a JSON object. The JSON Parse node is an essential intermediary step that converts this text string into a native JSON object. This transformation is crucial for the remainder of the workflow, as it allows subsequent nodes to access specific pieces of data from the itinerary, such as the `day_by_day_itinerary` or `budget_breakdown`, using simple dot notation.\n\n**Node 4: The Email Node**\nThe final node in the workflow is responsible for delivering the finished product to the user. An Email node, configured with the user's email address from the initial webhook, dynamically constructs the email body. The content of the email is built by referencing the parsed JSON data from the previous node. For example, the subject line could be \"Your Bali Itinerary,\" and the body could be a formatted HTML email that displays the `itinerary_summary`, followed by a detailed, day-by-day plan, and concludes with the budget, transportation, and etiquette sections. This automated delivery completes the end-to-end user experience without any manual intervention.\n\n## Chapter 5: Expanding the Agent's Capabilities\n\nThe foundational system detailed in this report can be significantly enhanced by incorporating additional nodes and API integrations. The current model relies on a static knowledge base, but a truly powerful agent can pull from real-time data sources to provide the most accurate and up-to-date information.[2]\n\nA logical next step would be to integrate an external API for flights and hotels, such as SerpAPI.[2] This would enable the agent to move beyond generating a conceptual plan to providing specific, real-time recommendations for flights and accommodation based on the user's dates and budget. Similarly, incorporating a weather API could provide up-to-the-minute forecasts, allowing the itinerary to be dynamically adjusted based on expected conditions, such as suggesting an indoor activity during a forecasted rain shower.[2]\n\nFor a more sophisticated system, the single AI Agent node could be replaced with a series of specialized agents orchestrated by a master brain.[2] A dedicated `Research Agent`, powered by tools like Tavily or Perplexity, could be tasked with retrieving the most recent and cited information on a topic, such as a new restaurant or a local festival.[2] This modular approach ensures that the agent's knowledge base is constantly refreshed and that it can provide highly accurate, cited information, elevating the quality of the itinerary from a static plan to a dynamic, well-informed travel guide. This evolution of the system reinforces the value of building with n8n's extendable architecture from the start."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "b44af3ec-6ed2-4a3b-8a3c-7a0bab8cf78d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        272,
+        208
+      ],
+      "id": "baf0d281-c1ea-4b66-b97a-2e7bdcfc1a25",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xGG0RloRZRAYS8u2",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Get raw output string\nlet raw = $json.output;\n\n// Remove ```json and ``` if present\nraw = raw.replace(/```json/g, \"\").replace(/```/g, \"\").trim();\n\n// Parse into object\nconst parsed = JSON.parse(raw);\n\n// Return in correct n8n format\nreturn {\n  json: parsed\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        0
+      ],
+      "id": "bc098111-0409-4964-86bf-e5ce18e021f4",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').item.json.query.email }}",
+        "subject": "=Your itinerary plan for {{ $('Webhook').item.json.query.destination }}",
+        "emailType": "text",
+        "message": "={{ $json.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1392,
+        0
+      ],
+      "id": "1e124d5b-5ded-4892-8610-2e453d8d20cd",
+      "name": "Send a message",
+      "webhookId": "2845608f-fec0-4b15-847a-39bfe0f7ff10",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "zUvMfg8pnq3SYcXK",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json;\n\n// Recursive function to format any nested JSON into text\nfunction formatData(obj, indent = 0) {\n  let output = \"\";\n  const pad = \" \".repeat(indent);\n\n  if (Array.isArray(obj)) {\n    obj.forEach((item, i) => {\n      output += `${pad}- ${typeof item === \"object\" ? \"\\n\" + formatData(item, indent + 2) : item}\\n`;\n    });\n  } else if (typeof obj === \"object\" && obj !== null) {\n    for (const [key, value] of Object.entries(obj)) {\n      if (typeof value === \"object\") {\n        output += `${pad}${key}:\\n${formatData(value, indent + 2)}`;\n      } else {\n        output += `${pad}${key}: ${value}\\n`;\n      }\n    }\n  } else {\n    output += `${pad}${obj}\\n`;\n  }\n\n  return output;\n}\n\n// Generate email body\nlet emailBody = `Hi,\n\nHere’s your customized trip details:\n\n${formatData(data)}\n\nHave an amazing trip! 🌸\n`;\n\nreturn [\n  {\n    json: {\n      subject: \"Your Travel Plan 🌍\",\n      body: emailBody\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        976,
+        0
+      ],
+      "id": "9ac8c28a-1694-4216-89d8-a3ae4e58da1a",
+      "name": "Code1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fa83c539-092c-4a42-bd8b-2bed23eeb44f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "51e6da84d7bcee7caaef869c6506fc29ea450a190f58156b90b14920448081ac"
+  },
+  "id": "nkkLNRxBIuPkZdSq",
+  "tags": []
+}
